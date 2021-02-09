@@ -1,0 +1,735 @@
+********************************************************************************************************************************
+++ Bill Mutabazi
+++ Assignment 2
+
+
+Q1.
+
+mysql> CREATE TABLE tab1(no INT, col1 VARCHAR(20), col2 VARCHAR(20), col3 VARCHAR(20), col4 VARCHAR(20), col5 VARCHAR(20));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SHOW tables;
++----------------+
+| Tables_in_Asgn |
++----------------+
+| tab1           |
++----------------+
+1 row in set (0.01 sec)
+
+mysql> select * from tab1;
+Empty set (0.00 sec)
+
+mysql> insert into tab1(no, col1, col2, col3, col4, col5) values(1, "A","B","C","D","E"),(2,"","A","B","C","D");
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from tab1;
++------+------+------+------+------+------+
+| no   | col1 | col2 | col3 | col4 | col5 |
++------+------+------+------+------+------+
+|    1 | A    | B    | C    | D    | E    |
+|    2 |      | A    | B    | C    | D    |
++------+------+------+------+------+------+
+2 rows in set (0.00 sec)
+
+mysql> insert into tab1(no, col1, col2, col3, col4, col5) values(3, "E","","","","A"),(4,"","A","E","","D"),(5,"E","D","C","B","");
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from tab1;
++------+------+------+------+------+------+
+| no   | col1 | col2 | col3 | col4 | col5 |
++------+------+------+------+------+------+
+|    1 | A    | B    | C    | D    | E    |
+|    2 |      | A    | B    | C    | D    |
+|    3 | E    |      |      |      | A    |
+|    4 |      | A    | E    |      | D    |
+|    5 | E    | D    | C    | B    |      |
++------+------+------+------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> select *from tab1 where no="A";
+Empty set, 1 warning (0.00 sec)
+
+mysql> create view q1 as 
+    -> select *from tab1 where no="A";
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from q1
+    -> ;
+Empty set, 1 warning (0.00 sec)
+
+mysql> create view q1 as  select *from tab1 where 'A' IN (col1,col2,col3,col4,col5);
+ERROR 1050 (42S01): Table 'q1' already exists
+mysql> create view Q1 as  select *from tab1 where 'A' IN (col1,col2,col3,col4,col5);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from Q1;
++------+------+------+------+------+------+
+| no   | col1 | col2 | col3 | col4 | col5 |
++------+------+------+------+------+------+
+|    1 | A    | B    | C    | D    | E    |
+|    2 |      | A    | B    | C    | D    |
+|    3 | E    |      |      |      | A    |
+|    4 |      | A    | E    |      | D    |
++------+------+------+------+------+------+
+4 rows in set (0.00 sec)
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Q2.
+SELECT * FROM (SELECT FIRST_NAME , SALARY, DEPARTMENT_ID,
+AVG(SALARY)OVER (PARTITION BY DEPARTMENT_ID ) av_sal 
+FROM EMPLOYEES e2)
+WHERE SALARY > av_sal;
+
+|FIRST_NAME|SALARY|DEPARTMENT_ID|AV_SAL                                   |
+|----------|------|-------------|-----------------------------------------|
+|Michael   |13000 |20           |9500                                     |
+|Den       |11000 |30           |4150                                     |
+|Matthew   |8000  |50           |3475.555555555555555555555555555555555556|
+|Adam      |8200  |50           |3475.555555555555555555555555555555555556|
+|Payam     |7900  |50           |3475.555555555555555555555555555555555556|
+|Shanta    |6500  |50           |3475.555555555555555555555555555555555556|
+|Kevin     |5800  |50           |3475.555555555555555555555555555555555556|
+|Renske    |3600  |50           |3475.555555555555555555555555555555555556|
+|Trenna    |3500  |50           |3475.555555555555555555555555555555555556|
+|Nandita   |4200  |50           |3475.555555555555555555555555555555555556|
+|Alexis    |4100  |50           |3475.555555555555555555555555555555555556|
+|Kelly     |3800  |50           |3475.555555555555555555555555555555555556|
+|Jennifer  |3600  |50           |3475.555555555555555555555555555555555556|
+|Sarah     |4000  |50           |3475.555555555555555555555555555555555556|
+|Britney   |3900  |50           |3475.555555555555555555555555555555555556|
+|Alexander |9000  |60           |5760                                     |
+|Bruce     |6000  |60           |5760                                     |
+|John      |14000 |80           |8955.882352941176470588235294117647058824|
+|Karen     |13500 |80           |8955.882352941176470588235294117647058824|
+|Alberto   |12000 |80           |8955.882352941176470588235294117647058824|
+|Gerald    |11000 |80           |8955.882352941176470588235294117647058824|
+|Eleni     |10500 |80           |8955.882352941176470588235294117647058824|
+|Peter     |10000 |80           |8955.882352941176470588235294117647058824|
+|David     |9500  |80           |8955.882352941176470588235294117647058824|
+|Peter     |9000  |80           |8955.882352941176470588235294117647058824|
+|Janette   |10000 |80           |8955.882352941176470588235294117647058824|
+|Patrick   |9500  |80           |8955.882352941176470588235294117647058824|
+|Allan     |9000  |80           |8955.882352941176470588235294117647058824|
+|Clara     |10500 |80           |8955.882352941176470588235294117647058824|
+|Danielle  |9500  |80           |8955.882352941176470588235294117647058824|
+|Lisa      |11500 |80           |8955.882352941176470588235294117647058824|
+|Harrison  |10000 |80           |8955.882352941176470588235294117647058824|
+|Tayler    |9600  |80           |8955.882352941176470588235294117647058824|
+|Ellen     |11000 |80           |8955.882352941176470588235294117647058824|
+|Steven    |24000 |90           |19333.3333333333333333333333333333333333 |
+|Nancy     |12008 |100          |8601.333333333333333333333333333333333333|
+|Daniel    |9000  |100          |8601.333333333333333333333333333333333333|
+|Shelley   |12008 |110          |10154                                    |
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Q3.
+
+USE Asgn;
+select * from table1 
+left join table2
+on table1.col1 = table2.col1 
+where table1.col1 is NULL;
+
+TABLE1
+col1
+_________
+B  |
+_________
+C  |
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Q4.
+
+use Asgn;
+
+create table if not exists tab4(
+	match_no int not null auto_increment primary key,
+    team_a varchar(25),
+    team_b varchar(25),
+    winner varchar(25)
+);
+
+insert into tab4(team_a, team_b, winner) values ('west','sri','west');
+insert into tab4(team_a, team_b, winner) values ('ind','sri','ind');
+insert into tab4(team_a, team_b, winner) values ('aus','sri','aus');
+insert into tab4(team_a, team_b, winner) values ('west','sri','sri');
+insert into tab4(team_a, team_b, winner) values ('aus','ind','aus');
+insert into tab4(team_a, team_b, winner) values ('west','sri','west');
+insert into tab4(team_a, team_b, winner) values ('ind','west','west');
+insert into tab4(team_a, team_b, winner) values ('west','aus','aus');
+insert into tab4(team_a, team_b, winner) values ('west','ind','ind');
+insert into tab4(team_a, team_b, winner) values ('aus','west','west');
+insert into tab4(team_a, team_b, winner) values ('west','sri','west');
+insert into tab4(team_a, team_b, winner) values ('ind','aus','ind');
+insert into tab4(team_a, team_b, winner) values ('sri','new','sri');
+insert into tab4(team_a, team_b, winner) values ('new','ind','ind');
+
+with matches_played as (select team_name, sum(cnt) as Numb_matches_played from(
+   select TEAM_A team_name,count(*) cnt 
+   from cricket group by TEAM_A
+   union all
+   select TEAM_b,count(*) from cricket group by TEAM_b)
+   group by team_name), 
+   
+matches_won as (select winner team_name,count(*) Numb_matches_won
+                from cricket
+                group by winner)
+                
+select matches_played.team_name, Numb_matches_played,nvl(Numb_matches_won,0) matches_won,Numb_matches_played-nvl(Numb_matches_won,0) matches_lost
+from matches_played full outer join matches_won
+on matches_played.team_name = matches_won.team_name;
+
+|TEAM_NAME                     |NUMB_MATCHES_PLAYED|MATCHES_WON|MATCHES_LOST|
+|------------------------------|-------------------|-----------|------------|
+|INDIA                         |6                  |4          |2           |
+|AUSTRALIA                     |5                  |3          |2           |
+|WESTINDIES                    |8                  |5          |3           |
+|NEWZEALAND                    |2                  |0          |2           |
+|SRILANKA                      |7                  |2          |5           |
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Q5.
+
+SELECT EMPLOYEE_ID , LEVEL FROM hr.EMPLOYEES e 
+CONNECT BY LEVEL <=10;
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Q6. Used Dual Table:
+
+SELECT rownum,
+SUBSTR(s,ROWNUM,1) answ1,
+SUBSTR(s,ROWNUM*-1,1) answ2,
+SUBSTR(s,1,ROWNUM) answ3,
+SUBSTR(s,ROWNUM) answ4,
+RPAD(' ',ROWNUM,' ')|| SUBSTR(s,ROWNUM) answ5,
+RPAD(' ',LENGTH (s)+1 - ROWNUM,' ')|| SUBSTR(s,ROWNUM) answ6
+FROM (SELECT 'WELCOME' AS s FROM dual)
+CONNECT BY LEVEL <= LENGTH (s);
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Q7. Used Dual table:
+
+
+WITH d AS(SELECT 'bill.mutabazi@gmail.com' email FROM dual),
+ds as(SELECT SUBSTR(email,1,instr(email,'@')-1)n ,
+SUBSTR(m,INSTR(email,'@')+1) d FROM d)
+
+SELECT SUBSTR(n,1,INSTR(n,'.',1,1)-1)first_name,
+	   SUBSTR(n,1,INSTR(n,'.',1,2)+1)last_name,
+	   
+	   d domain_name
+	   FROM ds;
+	   
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Q8.
+
+WITH d1 AS(SELECT mail_id m,
+SUBSTR(mail_id,1,INSTR(MAIL_ID ,'@')-1)n,
+SUBSTR(mail_id,INSTR(MAIL_ID ,'@')+1)d
+FROM TAB1),
+
+d2 AS ( SELECT m,d,n, )
+instr(n,'.',1,1)f_dot,
+instr(n,'.',1,1,2)s_dot
+FROM d1),
+
+d3 AS(SELECT m,d,n, f_dot,s_dot,
+SUBSTR(n,1,DECODE(f_dot,0,LENGTH(n),f_dot -1) first_name,
+decode(s_dot,1,0,NULL , SUBSTR(n,f_dot+1,s_dot - f_dot-1) middle_name, 
+decode(f_dot + s_dot,0,NULL,SUBSTR(n,DECODE(s_dot,0,f_dot,s_dot)+1)) last_name
+
+FROM d2);
+SELECT first_name, middle_name,last_name FROM d3;
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Q9. 
+
+use test;
+
+create table if not exists emp_t(empno int,
+                   ename varchar(100),
+                   mgr   int,
+                   sal   int);
+truncate table emp_t;
+
+Insert into EMP_T (EMPNO,ENAME,MGR,SAL) values (7839,'KING',null,1000);
+Insert into EMP_T (EMPNO,ENAME,MGR,SAL) values (7698,'BLAKE',7839,700);
+Insert into EMP_T (EMPNO,ENAME,MGR,SAL) values (7782,'CLARK',7839,500);
+Insert into EMP_T (EMPNO,ENAME,MGR,SAL) values (7566,'JONES',7839,800);
+Insert into EMP_T (EMPNO,ENAME,MGR,SAL) values (7788,'SCOTT',7566,200);
+Insert into EMP_T (EMPNO,ENAME,MGR,SAL) values (7902,'FORD',7566,100);
+Insert into EMP_T (EMPNO,ENAME,MGR,SAL) values (7369,'SMITH',7902,75);
+Insert into EMP_T (EMPNO,ENAME,MGR,SAL) values (7499,'ALLEN',7698,100);
+Insert into EMP_T (EMPNO,ENAME,MGR,SAL) values (7521,'WARD',7698,200);
+Insert into EMP_T (EMPNO,ENAME,MGR,SAL) values (7654,'MARTIN',7698,150);
+Insert into EMP_T (EMPNO,ENAME,MGR,SAL) values (7844,'TURNER',7698,150);
+Insert into EMP_T (EMPNO,ENAME,MGR,SAL) values (7876,'ADAMS',7788,50);
+Insert into EMP_T (EMPNO,ENAME,MGR,SAL) values (7900,'JAMES',7698,100);
+Insert into EMP_T (EMPNO,ENAME,MGR,SAL) values (7934,'MILLER',7782,300);
+
+select * from emp_t;
+
+
+select *
+from emp_t as t1
+left join emp_t as t2 on t2.mgr = t1.empno
+left join emp_t as t3 on t3.mgr = t2.empno
+left join emp_t as t4 on t4.mgr = t3.empno
+where t1.empno = 7839;
+
+with recursive employee_paths (empno, ename, sal, path) as 
+(
+	select empno, ename, sal, cast(empno as char(200))
+    from emp_t
+    where empno = 7839
+    union all
+    select emp_t.empno, emp_t.ename, emp_t.sal, concat(employee_paths.path, ',', emp_t.empno)
+    from employee_paths join emp_t
+    on employee_paths.empno = emp_t.mgr
+)
+select * from employee_paths;
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Q11.
+
+use Asgn;
+select * from City a, City b
+where a.id < b.id;
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Q12.
+
+select m.empno,m.ename,
+       listagg(e.ename,',') name_of_rep,
+       count(e.ename) count_of_rep
+from emp m LEFT OUTER JOIN emp e
+ON m.empno=e.mgr
+group by m.empno,m.ename
+order by m.empno
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Q13. Write a sql to replace the comma separated value
+
+create table if not exists tab13a (
+	service_code char(2),
+    service_name varchar(255)
+);
+truncate table tab13a;
+
+create table if not exists tab13b (
+	product_code char(3),
+    service_order varchar(255)
+);
+truncate table tab13b;
+
+insert into tab13a (service_code,service_name) values ('a', 'service-a');
+insert into tab13a (service_code,service_name) values ('b', 'service-b');
+insert into tab13a (service_code,service_name) values ('c', 'service-c');
+insert into tab13a (service_code,service_name) values ('d', 'service-d');
+
+insert into tab13b (product_code, service_order) values ('p1', 'a,c');
+insert into tab13b (product_code, service_order) values ('p2', 'c,b,d');
+insert into tab13b (product_code, service_order) values ('p3', 'd,a,c,b');
+insert into tab13b (product_code, service_order) values ('p4', 'a,b,c,d');
+insert into tab13b (product_code, service_order) values ('p5', 'd,c,b,a,b');
+
+-- write sql to replace the comma separate dcode with its respoective description --
+
+select * from tab13b;
+
+select product_code, product_desc, service_code, listagg(service.service_name.',') within group (order by l)
+from product_service, tabl13,
+	lateral( service level l from dual
+	connect by level <= regexp_count(service_order, ',')+1)
+where service.service_code =regexp_substr(service_order, [^,]+,1,l)
+group by product_code , product_desc, service_order
+order by product_code
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Q14.
+
+DECLARE @StartDate DateTime
+DECLARE @EndDate DateTime
+
+SET @StartDate = ‘2019-05-01’
+SET @EndDate = ‘2019-05-31’
+SELECT *
+FROM  TestInfo
+WHERE CapturedDate BETWEEN @StartDate AND @EndDate + ‘ 23:59:59’
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Q15.
+
+CREATE FUNCTION fnc_NumberOfWeekEnds(@dFrom DATETIME, @dTo   DATETIME)
+
+RETURNS INT AS
+
+BEGIN
+
+   Declare @weekends int
+
+   Set @weekends = 0
+
+   While @dFrom <= @dTo Begin
+
+      If ((datepart(dw, @dFrom) = 1)) OR (datepart(dw, @dFrom) = 7))    
+
+                  Set @weekends = @weekends + 1
+
+                  Set @dFrom = DateAdd(d, 1, @dFrom)
+
+   End
+
+   Return (@weekends)
+
+END
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Q16.
+
+with d as (select team_a a,
+       team_b b,
+       case when team_a = winner then 1 else 0 end a_w,
+       case when team_b = winner then 1 else 0 end b_w
+from cricket)
+select c,count(*) total,sum(w) won,count(*) -sum(w) lost from (
+select decode(r,1,a,b) c,decode(r,1,a_w,b_w) w
+from d,(select rownum r from dual connect by level <=2))
+group by c;
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Q17.
+
+--Query 1
+
+with t as (select level r
+from dual
+connect by level<=6)
+select t1.r as ROLL1, t2.r as ROLL2, t3.r as ROLL3
+from t t1, t t2, t t3
+where (t3.r = t1.r+t2.r)
+order by 3 desc; 
+
+-- Query2
+
+ with t as (select level r
+from dual
+connect by level<=6)
+select t1.r as ROLL1, t2.r as ROLL2, t3.r as ROLL3
+from t t1, t t2, t t3
+where (t3.r = t1.r+t2.r or t2.r = t1.r+t3.r or t1.r = t2.r+t3.r)
+order by 3 desc;
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Q18.
+
+1. for sorting numbers in the comma separated list
+
+WITH t AS (
+    SELECT  '3,10,5,1,7,55,75,100,42,12,17' d
+    FROM         dual
+) 
+  SELECT  LISTAGG(s,',') WITHIN GROUP(
+    ORDER BY to_number(s))
+  FROM(
+        SELECT regexp_substr(d,'[^,]+',1,level) s
+        FROM   t
+        CONNECT BY level <= regexp_count(d,',') + 1
+    );
+    
+    
+2. for sorting 'character' in the given string
+
+WITH t AS (
+    SELECT  'WELCOME' d
+    FROM dual
+) SELECT LISTAGG(d) WITHIN GROUP( ORDER BY d )
+  FROM(
+        SELECT substr(d,level,1) d
+        FROM t
+
+        CONNECT BY level <= length(d));
+    
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+19.
+Table: oracle
+used dual.
+
+REVERSE FUNCTION
+
+with t as (
+	SELECT 'ABCDEF' s from dual)
+SELECT d, listagg(d) withing group (order by DESC)
+FROM
+(
+ SELECT substr(s,level,1) d
+ FROM t
+ CONNECT by level <= length(s)
+ );
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+create table if not exists tab20a(
+	emp_no int auto_increment,
+    ename varchar(255)
+);
+truncate table tab20a;
+
+create table if not exists tab20b(
+	id int auto_increment,
+	empno1 int,
+    ename1 varchar(255),
+    empno2 int,
+    ename2 varchar(255),
+    primary key(id)
+);
+truncate table tab20b;
+
+insert into tab20a(ename) select ename from emp_t; 
+
+select * from tab20a;
+
+-- write insert statement to split first table with one column to second table with two columns --
+
+select * from tab20b;
+truncate table tab20b;
+drop table tab20b;
+
+alter table tab20a drop primary key;
+
+insert into tab20b(empno1,ename1)
+select a.emp_no,a.ename,b.emp_no,b.ename from 
+(select * from tab20a order by emp_no)a, (select * from tab20a order by emp_no desc)b;
+
+------
+22.
+
+create table if not exists tab22(
+	rownum int auto_increment,
+    c int,
+    primary key(rownum)
+);
+
+insert into tab22(c) values (1);
+insert into tab22(c) values (2);
+insert into tab22(c) values (3);
+insert into tab22(c) values (5);
+insert into tab22(c) values (6);
+insert into tab22(c) values (7);
+insert into tab22(c) values (9);
+insert into tab22(c) values (10);
+insert into tab22(c) values (11);
+insert into tab22(c) values (13);
+insert into tab22(c) values (14);
+insert into tab22(c) values (16);
+insert into tab22(c) values (18);
+insert into tab22(c) values (19);
+insert into tab22(c) values (20);
+
+select c from tab22;
+select min(c) as start_range, max(c) as end_range 
+from tab22
+group by c-rownum;
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+24.
+
+create table if not exists tab23(
+	name varchar(255),
+    start_year int,
+    end_year int
+);
+truncate table tab23;
+
+insert into tab23(name, start_year, end_year) values ('swift',2007,2009);
+insert into tab23(name, start_year, end_year) values ('swift',2009,2011);
+insert into tab23(name, start_year, end_year) values ('swift',2011,2013);
+insert into tab23(name, start_year, end_year) values ('maruti',2009,2011);
+insert into tab23(name, start_year, end_year) values ('maruti',2013,2015);
+
+select * from tab23;
+select name, min(start_year), max(start_year) from tab23 group by name;
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+29. 
+
+Table: oracle
+
+create table team(ename varchar2(30), city varchar2(100));
+
+insert into team values('Veda','Pune');
+insert into team values('Shruthi','Pune');
+insert into team values('Apoorva','Pune');
+insert into team values('Karthik','Pune');
+insert into team values('Jhon','Pune');
+insert into team values('Shyam','Delhi');
+insert into team values('Ram','Delhi');
+insert into team values('Somen','Kolkata');
+
+Query:
+
+input 1:
+with t as(
+SELECT ename, city,
+	CEIL(ROW_NUMBER() OVER (PARTITITION BY city) ORDER BY ROW_NUM)/2 gr_no
+FROM team
+)
+
+SELECT city, ename, listagg(ename,',') WITHIN GROUP( ORDER BY ename) team_name
+FROM T
+GROUP BY gr_no,city;
+
+input 2:
+input 1:
+with t as(
+SELECT ename, city,
+	CEIL(ROW_NUMBER() OVER (PARTITITION BY city) ORDER BY ROW_NUM)/3 gr_no
+FROM team
+)
+
+SELECT city, ename, listagg(ename,',') WITHIN GROUP( ORDER BY ename) team_name
+FROM T
+GROUP BY gr_no,city;
+
+
+input3:
+input 1:
+with t as(
+SELECT ename, city,
+	CEIL(ROW_NUMBER() OVER (PARTITITION BY city) ORDER BY ROW_NUM)/4 gr_no
+FROM team
+)
+
+SELECT city, ename, listagg(ename,',') WITHIN GROUP( ORDER BY ename) team_name
+FROM T
+GROUP BY gr_no,city;
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+36.
+21.
+Table: oracle
+
+create table pract_emp(empno number,ename varchar2(100));
+INSERT INTO pract_emp values(1, 'samson eruiionon');
+INSERT INTO pract_emp values(2, 'abigail reoix');
+INSERT INTO pract_emp values(3, 'oracle mysql');
+
+SELECT ename, REGEXP_COUNT(upper(ename),'A') AS A,
+			  REGEXP_COUNT(upper(ename),'E') AS E,
+			  REGEXP_COUNT(upper(ename),'O') AS O,
+			  REGEXP_COUNT(upper(ename),'U') AS U,
+			  REGEXP_COUNT(upper(ename),'I') AS I
+FROM pract_emp;
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+37.
+22.
+
+create table pract_emp(empno number,ename varchar2(100));
+INSERT INTO pract_emp values(1, 'samson eruiionon');
+INSERT INTO pract_emp values(2, 'abigail reoix');
+INSERT INTO pract_emp values(3, 'oracle mysql');
+
+SELECT ename,
+LEN(ename)-LEN(REPLACE(ename,'a','')) 'Count of a',
+LEN(ename)-LEN(REPLACE(ename,'e','')) 'Count of e',
+LEN(ename)-LEN(REPLACE(ename,'i','')) 'Count of i',
+LEN(ename)-LEN(REPLACE(ename,'o','')) 'Count of o',
+LEN(ename)-LEN(REPLACE(ename,'u','')) 'Count of u' 
+FROM pract_emp;
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+
+38.
+20.
+table oracle:
+
+create table t_row (dpt_no number,ename varchar2(100));
+INSERT INTO t_row values(1, 'samson eruiionon');
+INSERT INTO t_row values(1, 'Bill baka');
+INSERT INTO t_row values(1, 'suuuuu eruiionon');
+INSERT INTO t_row values(3, 'samson p');
+INSERT INTO t_row  values(2, 'abigail rix');
+INSERT INTO t_row values(3, 'oracle mysql');
+
+SELECT * FROM t_row;
+
+
+Query 1:
+
+SELECT dpt_no, listagg(ename,' , ') WITHIN GROUP (ORDER BY ename)
+FROM T_ROW GROUP BY dpt_no;
+
+Query 2:
+
+CREATE TABLE Testdata
+(
+    SomeID INT,
+    OtherID INT,
+    Str VARCHAR(400)
+);
+
+INSERT Testdata SELECT 1,  9, '18,20,22';
+INSERT Testdata SELECT 2,  8, '17,19';
+INSERT Testdata SELECT 3,  7, '13,19,20';
+INSERT Testdata SELECT 4,  6, '';
+INSERT Testdata SELECT 9, 11, '1,2,3,4';
+
+Method1:
+select dpt_no, regexp_substr(ename,'\w+',1,level)
+from t_row1,
+	lateral(select level
+	from dual
+	connect by level <= regexp_count(ename,',')+1);
+
+select * from Testdata;
+
+Select otherID, value
+from Testdata
+cross apply STRING_SPLIT(str,',')cs;
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+
+
+
+
+
+
+
+
+
