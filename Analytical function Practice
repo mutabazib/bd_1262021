@@ -1,0 +1,36 @@
+### Comparing Dense_rank() and Rank()
+
+use Asgn;
+show tables;
+select * from employees;
+
+SELECT employee_id, first_name,
+       department_id,
+       salary,
+       DENSE_RANK() OVER (PARTITION BY department_id ORDER BY salary) AS Salary_Ranking
+FROM   employees
+where department_id=6;
+
+SELECT employee_id, first_name,
+       department_id,
+       salary,
+       RANK() OVER (PARTITION BY department_id ORDER BY salary) AS Salary_Ranking
+FROM   employees
+where department_id=6;
+
+### Comparing LEAD AND LAG
+
+SELECT employee_id, first_name,
+       department_id,
+       salary,
+       #LAG(salary, 1, 0) OVER (ORDER BY salary) AS previous_sal,
+       salary - LAG(salary, 1, 0) OVER (ORDER BY salary) AS salary_diff_to_prev
+FROM   employees;
+
+
+SELECT employee_id, first_name,
+       department_id,
+       salary,
+       LEAD(salary, 1, 0) OVER(PARTITION BY department_id ORDER BY salary) AS Next_sal,
+       salary - LEAD(salary, 1, 0) OVER(PARTITION BY department_id ORDER BY salary) AS salary_diff_to_Next
+FROM   employees;
